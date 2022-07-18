@@ -18,10 +18,26 @@ Ref guide at: [nvidia docs][1]
    - Run the commands:
    - `sudo apt update`
    - `sudo apt dist-upgrade`
+   - (opt) During `dist-upgrade` some of JetPack Debian packages are removed,  
+     other may not be updated, a workound is to after `apt dist-upgrade` run:
+        - `sudo apt install nvidia-jetpack`
 
 2. Re-log the <username> to activate the changes
 
-3. Useful commands:
+3. If you endub with an ERROR: "Procedure for bootloader update FAILED"
+    - run the following:
+        - `sudo mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/`
+        - `sudo mkdir /var/lib/dpkg/info/`
+        - `sudo apt-get update`
+        - `sudo apt-get -f install`
+        - `sudo mv /var/lib/dpkg/info/* /var/lib/dpkg/info_old/`
+        - `sudo rm -rf /var/lib/dpgk/info`
+        - `sudo mv /var/lib/dpkg/info_old/ /var/lib/dpkg/info/`
+    - Now you should be able to run the following:
+        - `sudo apt-get update`
+        - `sudo apt-get upgrade`
+
+4. Useful commands:
     - To check if rootfs redundancy A/B is active:
         - `sudo nvbootctrl -t rootfs dump-slots-info`
     - To enable rootfs A/B:
@@ -31,7 +47,7 @@ Ref guide at: [nvidia docs][1]
     - To mark the rootfs slot as unbootable use:
         - `l4t-rootfs-validation-config.sh`
 
-4. Additional resources:
+5. Additional resources:
     - [Nvidia developers forum1][2]
     - [Nvidia developers forum2][3]
     - [Nvidia developers forum3][4]
