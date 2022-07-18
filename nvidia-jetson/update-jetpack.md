@@ -36,6 +36,7 @@ Ref guide at: [nvidia docs][1]
     - Now you should be able to run the following:
         - `sudo apt-get update`
         - `sudo apt-get upgrade`
+    - Resource: [Aidam_Bo blog][6]
 
 4. Useful commands:
     - To check if rootfs redundancy A/B is active:
@@ -58,3 +59,4 @@ Ref guide at: [nvidia docs][1]
 [3]: <https://forums.developer.nvidia.com/t/i-want-to-check-if-a-b-system-update-is-available/209341/12> "nvidia developers forum"
 [4]: <https://forums.developer.nvidia.com/t/enable-filesystem-a-b/200163> "nvidia developers forum"
 [5]: <https://docs.nvidia.com/jetson/archives/l4t-archived/l4t-3261/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/rootfs_custom.html#wwpID0E0GE0HA> "nvidia developers forum"
+[6]: <https://blog.csdn.net/Aidam_Bo/article/details/110091337> "Adam_bo blog article"
