@@ -1,20 +1,20 @@
-#How-To Update Nvidia JetPack version (cmd):
+#How-To Update/Upgrade Nvidia JetPack version (cmd):
 
 Ref guide at: [nvidia docs][1]
 
-1. To update t oa new minor release:
+1. To update to a new minor release:
     - `sudo vi /etc/apt/sources.list.d/nvidia-l4t-apt-source.list`
     - Change the repository name for deb packages:
-        -```
-         deb https://repo.download.nvidia.com/jetson/common <release> main
-         deb https://repo.download.nvidia.com/jetson/<platform> <release> main
-         ```
-            - <platform> identifies the platform’s processor:
-              ```
-              t186 for NVIDIA® Jetson™ TX2 series
-              t194 for NVIDIA® Jetson AGX Xavier™ series or Jetson Xavier NX
-              t210 for NVIDIA® Jetson Nano™ devices or Jetson TX1
-              ```
+        - ```
+          deb https://repo.download.nvidia.com/jetson/common <release> main
+          deb https://repo.download.nvidia.com/jetson/<platform> <release> main
+          ```
+        - `<platform>` identifies the platform’s processor:
+          ```
+          t186 for NVIDIA® Jetson™ TX2 series
+          t194 for NVIDIA® Jetson AGX Xavier™ series or Jetson Xavier NX
+          t210 for NVIDIA® Jetson Nano™ devices or Jetson TX1
+          ```
    - Run the commands:
    - `sudo apt update`
    - `sudo apt dist-upgrade`
@@ -22,10 +22,11 @@ Ref guide at: [nvidia docs][1]
      other may not be updated, a workound is to after `apt dist-upgrade` run:
         - `sudo apt install nvidia-jetpack`
 
-2. Re-log the <username> to activate the changes
+2. Re-log the `<username>` to activate the changes
+    - (opt) You may also need to restart the machine
 
-3. If you endub with an ERROR: "Procedure for bootloader update FAILED"
-    - run the following:
+3. If you endup with an ERROR: "Procedure for bootloader update FAILED"
+    - Do the following:
         - `sudo mv /var/lib/dpkg/info/ /var/lib/dpkg/info_old/`
         - `sudo mkdir /var/lib/dpkg/info/`
         - `sudo apt-get update`
@@ -33,7 +34,7 @@ Ref guide at: [nvidia docs][1]
         - `sudo mv /var/lib/dpkg/info/* /var/lib/dpkg/info_old/`
         - `sudo rm -rf /var/lib/dpgk/info`
         - `sudo mv /var/lib/dpkg/info_old/ /var/lib/dpkg/info/`
-    - Now you should be able to run the following:
+    - Now you should be able to run:
         - `sudo apt-get update`
         - `sudo apt-get upgrade`
     - Resource: [Aidam_Bo blog][6]
