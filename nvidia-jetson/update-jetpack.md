@@ -21,4 +21,24 @@ Ref guide at: [nvidia docs][1]
 
 2. Re-log the <username> to activate the changes
 
+3. Useful commands:
+    - To check if rootfs redundancy A/B is active:
+        - `sudo nvbootctrl -t rootfs dump-slots-info`
+    - To enable rootfs A/B:
+        - `sudo nv_update_engine --enable-ab`
+    - To disable rootfs A/b:
+        - `sudo nv_update_engine --disable-ab`
+    - To mark the rootfs slot as unbootable use:
+        - `l4t-rootfs-validation-config.sh`
+
+4. Additional resources:
+    - [Nvidia developers forum1][2]
+    - [Nvidia developers forum2][3]
+    - [Nvidia developers forum3][4]
+    - [Nvidia docs][5]
+
 [1]: <https://docs.nvidia.com/jetson/archives/l4t-archived/l4t-3261/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/updating_jetson_and_host.html#wwpID0E0OK0HA> "nvidia docs"
+[2]: <https://forums.developer.nvidia.com/t/when-and-by-which-software-component-a-b-rootfs-boot-retry-count-is-decremented/197124/7> "nvidia developers forum"
+[3]: <https://forums.developer.nvidia.com/t/i-want-to-check-if-a-b-system-update-is-available/209341/12> "nvidia developers forum"
+[4]: <https://forums.developer.nvidia.com/t/enable-filesystem-a-b/200163> "nvidia developers forum"
+[5]: <https://docs.nvidia.com/jetson/archives/l4t-archived/l4t-3261/index.html#page/Tegra%20Linux%20Driver%20Package%20Development%20Guide/rootfs_custom.html#wwpID0E0GE0HA> "nvidia developers forum"
