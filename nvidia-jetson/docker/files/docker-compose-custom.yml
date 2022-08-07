@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+  # Service #1
+  service_one:
+    network_mode: host
+    runtime: nvidia
+    privileged: true
+    restart: always
+    image: <url>/<image>:latest
+    volumes:
+      - '/opt/<host_folder1>:/opt/<container_folder1>'
+    entrypoint: "/<path>/<program> <opts>"
+  # Service #2
+  service_two:
+    network_mode: host
+    runtime: nvidia
+    image: <url>/<image>:latest
+    depends_on:
+      - service_one
+    privileged: true
+    # (opt) Additional start commands
+    # command: "/<path>/<program_name> <args>"
+    volumes:
+      - '/<path>/<host_folder2>:/<path>/<container_folder2>'
