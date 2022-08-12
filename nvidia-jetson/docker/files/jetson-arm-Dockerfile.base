@@ -1,0 +1,85 @@
+# ---- BUILDER ----------------------------------------------------------------
+FROM stereolabs/zed:3.7-py-devel-jetson-jp4.6.1
+RUN apt-get update && apt install software-properties-common -y \
+    && add-apt-repository ppa:ubuntu-toolchain-r/test
+
+# ---- Install packages -------------------------------------------------------
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    # Install gRPC dependencies
+    libssl-dev \
+    git \
+    build-essential \
+    autoconf \
+    libtool \
+    pkg-config \
+    libssl-dev \
+    # Other dependiencies
+    gcc-9 \
+    g++-9 \
+    gdb \
+    libusb-1.0-0-dev \
+    rm -rf /var/lib/apt/lists/*
+
+# ---- Install CMake ----------------------------------------------------------
+RUN wget https://cmake.org/files/v3.16/cmake-3.16.5.tar.gz && \
+    tar -xvf cmake-3.16.5.tar.gz && cd cmake-3.16.5 && \
+    ./bootstrap && \
+    make -j4 && make install
+
+# ---- Install gRPC -----------------------------------------------------------
+WORKDIR /opt
+
+RUN git clone --recurse-submodules -b v1.43.2 https://github.com/grpc/grpc && \
+    mkdir -p grpc/cmake/build && \
+    cd grpc/cmake/build && \
+    cmake -DCMAKE_BUILD_TYPE=Release \
+    -DgRPC_INSTALL=ON \
+    -DgRPC_BUILD_TESTS=OFF \
+    -DgRPC_SSL_PROVIDER=package \
+    ../.. && \
+    make install
+
+# ---- Build & install OpenCV -------------------------------------------------
+RUN git clone --depth 1 --branch 4.5.5 https://github.com/opencv/opencv.git && \
+    git clone --depth 1 --branch 4.5.5 https://github.com/opencv/opencv_contrib.git && \
+    cd opencv && mkdir build && cd build && \
+    cmake \
+    -D CMAKE_BUILD_TYPE=RELEASE \
+    -D CMAKE_INSTALL_PREFIX=/usr/ \
+    -D ENABLE_NEON=ON \
+    -D BUILD_NEW_PYTHON_SUPPORT=ON \
+    -D BUILD_opencv_python3=ON \
+    -D PYTHON3_PACKAGES_PATH=/usr/lib/python3/dist-packages \
+    -D WITH_V4L=ON \
+    -D WITH_QT=OFF \
+    -D WITH_OPENGL=ON \
+    -D WITH_FFMPEG=ON \
+    -D WITH_GSTREAMER=ON \
+    -D ENABLE_FAST_MATH=ON \
+    -D CUDA_FAST_MATH=ON \
+    -D OPENCV_GENERATE_PKGCONFIG=ON \
+    -D OPENCV_ENABLE_NONFREE=ON \
+    -D OPENCV_EXTRA_MODULES_PATH=/opt/opencv_contrib/modules \
+    -D INSTALL_PYTHON_EXAMPLES=OFF \
+    -D INSTALL_C_EXAMPLES=OFF \
+    -D BUILD_EXAMPLES=OFF .. && \
+    make -j"$(nproc)" && \
+    make install && rm -rf ../opencv ../opencv_contrib
+
+# ---- Create tarball from OpenCV dynamic libs --------------------------------
+ARG libPath=/usr/lib/aarch64-linux-gnu/
+RUN tar -czvf ${libPath}/opencv.tar.gz \
+    /usr/lib/aarch64-linux-gnu/libopencv_highgui.so* \
+    /usr/lib/aarch64-linux-gnu/libopencv_core.so* \
+    /usr/lib/aarch64-linux-gnu/libopencv_video.so* \
+    /usr/lib/aarch64-linux-gnu/libopencv_videoio.so* \
+    /usr/lib/aarch64-linux-gnu/libopencv_imgcodecs.so* \
+    /usr/lib/aarch64-linux-gnu/libopencv_calib3d.so* \
+    /usr/lib/aarch64-linux-gnu/libopencv_imgproc.so* \
+    /usr/lib/aarch64-linux-gnu/libopencv_features2d.so* \
+    /usr/lib/aarch64-linux-gnu/libopencv_flann.so*
+
+# ---- Install ninja build tool -----------------------------------------------
+RUN wget http://ports.ubuntu.com/pool/universe/n/ninja-build/ninja-build_1.10.0-1build1_arm64.deb && \
+    apt install -y ./ninja-build_1.10.0-1build1_arm64.deb
